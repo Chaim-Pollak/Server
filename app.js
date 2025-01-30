@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import cron from "node-cron";
 
 cron.schedule("1 3 * * *", () => {
-  console.log("running a task every minute");
+    console.log("running a task every minute");
 });
 config();
 mongoDB();
@@ -20,11 +20,11 @@ import professionsRouter from "./routers/profession.router.js";
 import generalRouter from "./routers/general.router.js";
 
 app.use(
-  cors({
-    credentials: true,
-    optionsSuccessStatus: 200,
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-  })
+    cors({
+        credentials: true,
+        optionsSuccessStatus: 200,
+        origin: ["http://localhost:5173", "http://localhost:5174"],
+    })
 );
 app.use(cookieParser());
 app.use("/users", usersRouter);

@@ -4,23 +4,23 @@ import queriesEmployees from "../controllers/employees.controller.js";
 import verifyToken from "../middleware/verifyToken.midlleware.js";
 
 const {
-  signIn,
-  signUp,
-  update,
-  deleteManager,
-  getAllManagers,
-  Auth,
-  logOut,
-  autocompleteManager,
+    signIn,
+    signUp,
+    update,
+    deleteManager,
+    getAllManagers,
+    Auth,
+    logOut,
+    autocompleteManager,
 } = queries;
 const {
-  employeeSignIn,
-  employeeSignUp,
-  validateEmail,
-  updateEmployee,
-  deleteEmployee,
-  getAllEmployees,
-  getEmployeeById,
+    employeeSignIn,
+    employeeSignUp,
+    validateEmail,
+    updateEmployee,
+    deleteEmployee,
+    getAllEmployees,
+    getEmployeeById,
 } = queriesEmployees;
 const router = Router();
 
