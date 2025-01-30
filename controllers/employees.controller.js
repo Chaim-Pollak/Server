@@ -4,19 +4,19 @@ import { compare } from "bcrypt";
 import transporter from "../service/nodemailer.service.js";
 
 export default {
-  employeeSignUp: async (req, res) => {
-    try {
-      const { employeeName, employeeEmail, employeePassword } = req.body;
-      if (!employeeName || !employeeEmail || !employeePassword) {
-        throw new Error("all field required");
-      }
-      const employee = await employeeModel.create(req.body);
-      await transporter.sendMail({
-        from: "biton123654@gmail.com",
-        to: `${employeeEmail}`,
-        subject: "Hello ✔",
-        text: "Hello world?",
-        html: `
+    employeeSignUp: async (req, res) => {
+        try {
+            const { employeeName, employeeEmail, employeePassword } = req.body;
+            if (!employeeName || !employeeEmail || !employeePassword) {
+                throw new Error("all field required");
+            }
+            const employee = await employeeModel.create(req.body);
+            await transporter.sendMail({
+                from: "biton123654@gmail.com",
+                to: `${employeeEmail}`,
+                subject: "Hello ✔",
+                text: "Hello world?",
+                html: `
         <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
           <!-- Logo or Header Image -->
           <div style="text-align: center; margin-bottom: 30px;">
@@ -49,30 +49,30 @@ export default {
           </div>
         </div>
       `,
-      });
+            });
 
-      res.status(200).json({
-        success: true,
-        message: true,
-        employee,
-      });
-    } catch (error) {
-      if (error.code === 11000) {
-        error.message = "Email already exists!";
-      }
-      res.status(401).json({
-        success: false,
-        message: false,
-        error: error.message || error,
-      });
-    }
-  },
-  validateEmail: async (req, res) => {
-    try {
-      const { id } = req.params;
-      await employeeModel.findByIdAndUpdate(id, { verify: true });
+            res.status(200).json({
+                success: true,
+                message: true,
+                employee,
+            });
+        } catch (error) {
+            if (error.code === 11000) {
+                error.message = "Email already exists!";
+            }
+            res.status(401).json({
+                success: false,
+                message: false,
+                error: error.message || error,
+            });
+        }
+    },
+    validateEmail: async (req, res) => {
+        try {
+            const { id } = req.params;
+            await employeeModel.findByIdAndUpdate(id, { verify: true });
 
-      return res.send(`
+            return res.send(`
         <!DOCTYPE html>
         <html>
         <head>
@@ -183,9 +183,9 @@ export default {
         </body>
         </html>
       `);
-    } catch (error) {
-      // Error Page
-      return res.send(`
+        } catch (error) {
+            // Error Page
+            return res.send(`
         <!DOCTYPE html>
         <html>
         <head>
@@ -242,139 +242,139 @@ export default {
         </body>
         </html>
       `);
-    }
-  },
-  getEmployeeById: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const employee = await employeeModel.findById(id).populate(["issues", "employeeId"]);
-      res.json({
-        success: true,
-        message: true,
-        data: employee.issues
-      });
-    } catch (error) {
-      console.log(error);
-      res.json({
-        success: false,
-        message: false,
-        error: error.message || error,
-      });
-    }
-  },
-  employeeSignIn: async (req, res) => {
-    try {
-      const { employeeEmail, employeePassword } = req.body;
-      const employee = await employeeModel.findOne({ employeeEmail });
-      if (!employee) {
-        throw new Error("Email not exist");
-      }
-      const isPassworvalid = await compare(
-        employeePassword,
-        employee.employeePassword
-      );
-      console.log(employeePassword);
-      console.log(employee.employeePassword);
-      if (!isPassworvalid) {
-        throw new Error("the password not match");
-      }
+        }
+    },
+    getEmployeeById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const employee = await employeeModel.findById(id).populate(["issues", "employeeId"]);
+            res.json({
+                success: true,
+                message: true,
+                data: employee.issues
+            });
+        } catch (error) {
+            console.log(error);
+            res.json({
+                success: false,
+                message: false,
+                error: error.message || error,
+            });
+        }
+    },
+    employeeSignIn: async (req, res) => {
+        try {
+            const { employeeEmail, employeePassword } = req.body;
+            const employee = await employeeModel.findOne({ employeeEmail }).select("+employeePassword");;
+            if (!employee) {
+                throw new Error("Email not exist");
+            }
+            const isPassworvalid = await compare(
+                employeePassword,
+                employee.employeePassword
+            );
+            console.log(employeePassword);
+            console.log(employee.employeePassword);
+            if (!isPassworvalid) {
+                throw new Error("the password not match");
+            }
 
-      const token = jwt.sign({ ...employee }, process.env.JWT_SECRET, {
-        expiresIn: 60 * 60 * 60 * 1,
-      });
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 1,
-      });
+            const token = jwt.sign({ ...employee }, process.env.JWT_SECRET, {
+                expiresIn: 60 * 60 * 60 * 1,
+            });
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                maxAge: 1000 * 60 * 60 * 1,
+            });
 
-      res.status(200).json({
-        success: true,
-        message: true,
-        data: employee,
-      });
-    } catch (error) {
-      res.status(401).json({
-        success: false,
-        message: false,
-        error: error.message || error,
-      });
-    }
-  },
-  updateEmployee: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const updates = req.body;
+            res.status(200).json({
+                success: true,
+                message: true,
+                data: employee,
+            });
+        } catch (error) {
+            res.status(401).json({
+                success: false,
+                message: false,
+                error: error.message || error,
+            });
+        }
+    },
+    updateEmployee: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const updates = req.body;
 
-      const employee = await employeeModel.findById(id);
-      if (!employee) {
-        return res.status(404).json({
-          success: false,
-          message: "Employee not found",
-        });
-      }
+            const employee = await employeeModel.findById(id);
+            if (!employee) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Employee not found",
+                });
+            }
 
-      Object.assign(employee, updates);
+            Object.assign(employee, updates);
 
-      const employeeUpdated = await employee.save();
+            const employeeUpdated = await employee.save();
 
-      res.status(200).json({
-        success: true,
-        message: true,
-        employeeUpdated,
-      });
-    } catch (error) {
-      res.status(401).json({
-        success: false,
-        message: false,
-        error: error || error.message,
-      });
-    }
-  },
-  deleteEmployee: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const employeeDeleted = await employeeModel.findByIdAndDelete(id);
-      res.status(200).json({
-        success: true,
-        message: true,
-        employeeDeleted,
-      });
-    } catch (error) {
-      res.status(401).json({
-        success: false,
-        message: false,
-        error: error || error.message,
-      });
-    }
-  },
-  getAllEmployees: async (req, res) => {
-    try {
-      const { page = 1, limit = 4 } = req.query;
+            res.status(200).json({
+                success: true,
+                message: true,
+                employeeUpdated,
+            });
+        } catch (error) {
+            res.status(401).json({
+                success: false,
+                message: false,
+                error: error || error.message,
+            });
+        }
+    },
+    deleteEmployee: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const employeeDeleted = await employeeModel.findByIdAndDelete(id);
+            res.status(200).json({
+                success: true,
+                message: true,
+                employeeDeleted,
+            });
+        } catch (error) {
+            res.status(401).json({
+                success: false,
+                message: false,
+                error: error || error.message,
+            });
+        }
+    },
+    getAllEmployees: async (req, res) => {
+        try {
+            const { page = 1, limit = 4 } = req.query;
 
-      const count = await employeeModel.countDocuments();
+            const count = await employeeModel.countDocuments();
 
-      const skip = (page - 1) * limit;
+            const skip = (page - 1) * limit;
 
-      const allEmployees = await employeeModel
-        .find()
-        .populate("employeeId")
-        .sort({ createdAt: -1})
-        .skip(skip)
-        .limit(limit);
-      console.log(allEmployees);
-      res.status(200).json({
-        success: true,
-        message: true,
-        data: allEmployees,
-        count: count,
-      });
-    } catch (error) {
-      res.status(200).json({
-        success: false,
-        message: false,
-        error: error || error.message,
-      });
-    }
-  },
+            const allEmployees = await employeeModel
+                .find()
+                .populate("employeeId")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit);
+            console.log(allEmployees);
+            res.status(200).json({
+                success: true,
+                message: true,
+                data: allEmployees,
+                count: count,
+            });
+        } catch (error) {
+            res.status(200).json({
+                success: false,
+                message: false,
+                error: error || error.message,
+            });
+        }
+    },
 };
