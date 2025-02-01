@@ -126,7 +126,7 @@ export default {
         }
     },
     autocompleteIssue: async (req, res) => {
-        const INDEX_NAME = "autocomplete";
+        const INDEX_NAME = "autocompleteIssues";
         try {
             const SearchQuery = req.query.query;
 
