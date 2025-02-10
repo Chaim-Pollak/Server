@@ -2,8 +2,8 @@ import { Router } from "express";
 import queries from "../controllers/general.controller.js";
 
 const router = Router();
-const { getAlllength } = queries;
+const { getDocumentCounts } = queries;
 
-router.get("/getalllength", getAlllength);
+router.get("/getDocumentCounts", getDocumentCounts);
 
 export default router;
