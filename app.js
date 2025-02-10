@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import cron from "node-cron";
 
 cron.schedule("1 3 * * *", () => {
-    console.log("running a task every minute");
+  console.log("running a task every minute");
 });
 config();
 mongoDB();
@@ -19,12 +19,13 @@ import usersRouter from "./routers/users.router.js";
 import professionsRouter from "./routers/profession.router.js";
 import generalRouter from "./routers/general.router.js";
 
+const allowedOrigins = process.env.CORS_ORIGIN.split(",");
 app.use(
-    cors({
-        credentials: true,
-        optionsSuccessStatus: 200,
-        origin: ["http://localhost:5173", "http://localhost:5174"],
-    })
+  cors({
+    credentials: true,
+    optionsSuccessStatus: 200,
+    origin: allowedOrigins,
+  })
 );
 app.use(cookieParser());
 app.use("/users", usersRouter);
@@ -32,5 +33,5 @@ app.use("/issues", issuesRouter);
 app.use("/professions", professionsRouter);
 app.use("/general", generalRouter);
 
-const port = 3000;
+const port = process.env.PORT;
 app.listen(port, () => console.log(`server is running on port ${port}`));
