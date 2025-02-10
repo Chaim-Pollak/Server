@@ -16,6 +16,7 @@ export default {
         issue_urgency,
         issue_profession,
       } = req.body;
+
       if (
         !issue_building ||
         !issue_floor ||
@@ -38,7 +39,6 @@ export default {
 
       req.body.issue_images = results.map((result) => result.secure_url);
 
-      console.log(req.body);
       const issue = await issueModel.create(req.body);
 
       res.status(200).json({
@@ -47,14 +47,13 @@ export default {
         issue,
       });
     } catch (error) {
-      console.log(error);
       res.status(500).json({
         success: false,
-        massege: "not Success add new issue",
+        message: error.message,
       });
     }
   },
-
+  //   TODO complete the front side
   sendMailToManager: async (req, res) => {
     try {
       const { id } = req.params;
@@ -75,7 +74,6 @@ export default {
         data: mail,
       });
     } catch (error) {
-      console.log(error);
       res.json({
         success: false,
         message: false,
@@ -83,6 +81,7 @@ export default {
       });
     }
   },
+
   getAllIssues: async (req, res) => {
     try {
       const {
@@ -98,7 +97,6 @@ export default {
         ...(urgency !== "all" && { issue_urgency: search }),
         ...(profession !== "all" && { issue_profession: profession }),
       };
-
       const count = await issueModel.countDocuments(filterObject);
 
       const skip = (page - 1) * limit;
@@ -117,7 +115,6 @@ export default {
         count: count,
       });
     } catch (error) {
-      console.log(error);
       res.status(401).json({
         success: false,
         message: false,
@@ -125,6 +122,7 @@ export default {
       });
     }
   },
+
   autocompleteIssue: async (req, res) => {
     const INDEX_NAME = "autocompleteIssues";
     try {
@@ -141,6 +139,7 @@ export default {
           },
         },
       });
+
       pipeline.push({ $limit: 7 });
       pipeline.push({
         $project: {
@@ -155,6 +154,7 @@ export default {
       });
 
       const result = await issueModel.aggregate(pipeline).sort({ score: -1 });
+
       res.json({
         success: true,
         message: "the issue is found successfully",
@@ -175,6 +175,7 @@ export default {
       const issueUpdated = await issueModel.findByIdAndUpdate(id, issue, {
         new: true,
       });
+
       res.status(200).json({
         success: true,
         message: true,
@@ -188,11 +189,12 @@ export default {
       });
     }
   },
-  deleteAndCreateIssue: async (req, res) => {
+
+  // create history issue
+  deleteAndArchiveIssue: async (req, res) => {
     try {
       const { id } = req.params;
       const previousIssue = await issueModel.findByIdAndDelete(id);
-      // const issueCreated= await issuesHistoryModel.create(previousIssue)
       const issueForHistory = {
         issue_building: previousIssue.issue_building,
         issue_floor: previousIssue.issue_floor,
@@ -234,7 +236,7 @@ export default {
   associateEmployeeWithIssue: async (req, res) => {
     try {
       const { employees, issues } = req.body;
-      console.log(employees, issues);
+
       const employeeUpdated = await issueModel.findByIdAndUpdate(
         issues,
         { employees },
@@ -266,11 +268,11 @@ export default {
   allIssuesByProfession: async (req, res) => {
     try {
       const { id } = req.params;
-      console.log(id);
+
       const allIssues = await issueModel
         .find({ issue_profession: id })
         .populate(["employees", "issue_profession"]);
-      console.log(allIssues);
+
       res.json({
         success: true,
         message: true,

@@ -4,14 +4,14 @@ import queriesHistory from "../controllers/issuesHistory.controller.js";
 import upload from "../middleware/upload.js";
 const router = Router();
 const {
-    addIssues,
-    getAllIssues,
-    autocompleteIssue,
-    updateIssue,
-    associateEmployeeWithIssue,
-    allIssuesByProfession,
-    deleteAndCreateIssue,
-    sendMailToManager
+  addIssues,
+  getAllIssues,
+  autocompleteIssue,
+  updateIssue,
+  associateEmployeeWithIssue,
+  allIssuesByProfession,
+  deleteAndArchiveIssue,
+  sendMailToManager,
 } = queries;
 
 const { getAllHistories, getHistoryById } = queriesHistory;
@@ -22,12 +22,12 @@ router.get("/autocomplete", autocompleteIssue);
 router.put("/updateissue", associateEmployeeWithIssue);
 router.put("/update/:id", updateIssue);
 router.get("/allissuesbyprofession/:id", allIssuesByProfession);
-router.post("/deleteissue/:id", deleteAndCreateIssue);
+router.post("/deleteAndArchiveIssue/:id", deleteAndArchiveIssue);
 
-router.get("/sendmailtoManager/:id", sendMailToManager)
+router.get("/sendmailtoManager/:id", sendMailToManager);
 
 //issuesHistory
-router.get("/getallhistories", getAllHistories);
-router.get("/gethistorybyid/:id", getHistoryById)
+router.get("/getAllHistories", getAllHistories);
+router.get("/gethistorybyid/:id", getHistoryById);
 
 export default router;
