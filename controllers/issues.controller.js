@@ -53,34 +53,6 @@ export default {
       });
     }
   },
-  //   TODO complete the front side
-  sendMailToManager: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const mail = await transporter.sendMail({
-        from: "biton123654@gmail.com",
-        to: "biton123654@gmail.com",
-        subject: "Hello ✔",
-        text: "Hello world?",
-        html: `<div> I am finished issue number${id},please chack it if it's all good
-         <a href="http://localhost:5173/#/allissues"">
-         click here
-         <a/>
-         </div>`,
-      });
-      res.json({
-        success: true,
-        message: true,
-        data: mail,
-      });
-    } catch (error) {
-      res.json({
-        success: false,
-        message: false,
-        error: error || error.message,
-      });
-    }
-  },
 
   getAllIssues: async (req, res) => {
     try {
@@ -190,10 +162,12 @@ export default {
     }
   },
 
-  // create history issue
   deleteAndArchiveIssue: async (req, res) => {
     try {
       const { id } = req.params;
+
+      const previous = await issueModel.findById(id).populate("employees");
+
       const previousIssue = await issueModel.findByIdAndDelete(id);
       const issueForHistory = {
         issue_building: previousIssue.issue_building,
@@ -209,20 +183,55 @@ export default {
 
       const issueCreated = await issuesHistoryModel.create(issueForHistory);
 
-      // transporter.sendMail({
-      //   from: "biton123654@gmail.com",
-      //   to: `${employeeEmail}`,
-      //   subject: "Hello ✔",
-      //   text: "Hello world?",
-      //   html: "<div> your issue has been successfully resolved</div>"
+      await transporter.sendMail({
+        from: process.env.AUTH_USER,
+        to: previous.employees.employeeEmail,
+        subject: "Issue handling successfully completed",
+        html: `
+            <div style="background: linear-gradient(to bottom right, #fff8e5, #ffedd5); padding: 20px; border-radius: 15px; max-width: 600px; margin: auto; font-family: Arial, sans-serif">
+                <div style="text-align: center; margin-bottom: 20px">
+                    <div style="position: relative; display: inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" style="color: #d97706; display: block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                        </svg>
+                        <div style="position: absolute; top: -8px; right: -8px">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="color: #fbbf24; display: block;" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
 
-      // })
-      res.status(200).json({
-        success: true,
-        message: true,
-        data: previousIssue,
-        data2: issueCreated,
-      });
+                <div style="text-align: center; margin-bottom: 20px">
+                    <h1 style="font-size: 24px; color: #92400e;">Fault successfully resolved!</h1>
+                    <div style="width: 100px; height: 5px; background: #fbbf24; margin: 0 auto; border-radius: 2px;"></div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center">
+                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px">
+                        <span style="font-size: 16px; font-weight: bold; color: #92400e;">Issue number #${previousIssue._id} has been resolved</span>
+                    </div>
+                    <p style="color: #92400e;">Hello ${previous.employees.employeeName},</p>
+                    <p style="color: #d97706; line-height: 1.6;">We would like to thank you for your professional work in resolving the fault.</p>
+                    <div style="color: #92400e; font-weight: 500;">
+                        <p>Best regards,</p>
+                        <p>Keep up the great work,</p>
+                        <p>Management Division</p>
+                        <p style="color: #b45309; font-size: 14px;">Service Department Manager</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; color: #d97706; font-size: 12px;">
+                    <p>This message was sent from the fault management system.</p>
+                </div>
+            </div>`,
+      }),
+        res.status(200).json({
+          success: true,
+          message: true,
+          data: previousIssue,
+          data2: issueCreated,
+        });
     } catch (error) {
       res.status(401).json({
         success: false,
@@ -232,7 +241,6 @@ export default {
     }
   },
 
-  //Client
   associateEmployeeWithIssue: async (req, res) => {
     try {
       const { employees, issues } = req.body;

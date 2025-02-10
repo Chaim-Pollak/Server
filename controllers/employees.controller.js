@@ -12,7 +12,7 @@ export default {
       }
       const employee = await employeeModel.create(req.body);
       await transporter.sendMail({
-        from: "biton123654@gmail.com",
+        from: process.env.AUTH_USER,
         to: `${employeeEmail}`,
         subject: "Email verification",
         html: `

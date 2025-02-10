@@ -11,7 +11,6 @@ const {
   associateEmployeeWithIssue,
   allIssuesByProfession,
   deleteAndArchiveIssue,
-  sendMailToManager,
 } = queries;
 
 const { getAllHistories, getHistoryById } = queriesHistory;
@@ -24,10 +23,8 @@ router.put("/update/:id", updateIssue);
 router.get("/allissuesbyprofession/:id", allIssuesByProfession);
 router.post("/deleteAndArchiveIssue/:id", deleteAndArchiveIssue);
 
-router.get("/sendmailtoManager/:id", sendMailToManager);
-
 //issuesHistory
 router.get("/getAllHistories", getAllHistories);
-router.get("/gethistorybyid/:id", getHistoryById);
+router.get("/getHistoryById/:id", getHistoryById);
 
 export default router;
