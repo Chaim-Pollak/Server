@@ -66,7 +66,7 @@ export default {
 
       const filterObject = {
         ...(status !== "all" && { issue_status: status }),
-        ...(urgency !== "all" && { issue_urgency: search }),
+        ...(urgency !== "all" && { issue_urgency: urgency }),
         ...(profession !== "all" && { issue_profession: profession }),
       };
       const count = await issueModel.countDocuments(filterObject);
