@@ -1,29 +1,31 @@
 import { Router } from "express";
-import queries from "../controllers/issues.controller.js";
-import queriesHistory from "../controllers/issuesHistory.controller.js";
+import issueQueries from "../controllers/issues.controller.js";
+import historyQueries from "../controllers/issuesHistory.controller.js";
 import upload from "../middleware/upload.js";
-const router = Router();
+
 const {
   addIssues,
   getAllIssues,
   autocompleteIssue,
   updateIssue,
+  deleteAndArchiveIssue,
   associateEmployeeWithIssue,
   allIssuesByProfession,
-  deleteAndArchiveIssue,
-} = queries;
+} = issueQueries;
 
-const { getAllHistories, getHistoryById } = queriesHistory;
+const { getAllHistories, getHistoryById } = historyQueries;
+
+const router = Router();
 
 router.post("/addIssues", upload.array("issue_images", 12), addIssues);
-router.get("/getallissues", getAllIssues);
+router.get("/getAllIssues", getAllIssues);
 router.get("/autocomplete", autocompleteIssue);
-router.put("/updateissue", associateEmployeeWithIssue);
 router.put("/update/:id", updateIssue);
-router.get("/allissuesbyprofession/:id", allIssuesByProfession);
 router.post("/deleteAndArchiveIssue/:id", deleteAndArchiveIssue);
+router.put("/updateIssue", associateEmployeeWithIssue);
+router.get("/allIssuesByProfession/:id", allIssuesByProfession);
 
-//issuesHistory
+//History
 router.get("/getAllHistories", getAllHistories);
 router.get("/getHistoryById/:id", getHistoryById);
 

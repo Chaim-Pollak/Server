@@ -1,46 +1,48 @@
 import { Router } from "express";
-import queries from "../controllers/managers.controller.js";
-import queriesEmployees from "../controllers/employees.controller.js";
+import managerQueries from "../controllers/managers.controller.js";
+import employeeQueries from "../controllers/employees.controller.js";
 import verifyToken from "../middleware/verifyToken.middleware.js";
 
 const {
-  signIn,
   signUp,
+  signIn,
+  Auth,
+  logOut,
   update,
   deleteManager,
   getAllManagers,
-  Auth,
-  logOut,
   autocompleteManager,
-} = queries;
+} = managerQueries;
+
 const {
-  employeeSignIn,
   employeeSignUp,
   validateEmail,
+  getEmployeeById,
+  employeeSignIn,
   updateEmployee,
   deleteEmployee,
   getAllEmployees,
-  getEmployeeById,
-} = queriesEmployees;
+} = employeeQueries;
+
 const router = Router();
 
 //managers
+router.post("/manager/signup", signUp);
 router.post("/manager/signin", signIn);
 router.get("/auth", verifyToken, Auth);
-router.post("/manager/signup", signUp);
+router.get("/logout", logOut);
 router.put("/manager/update/:id", update);
 router.delete("/manager/delete/:id", deleteManager);
-router.get("/manager/getallmanagers", getAllManagers);
-router.get("/logout", logOut);
-// router.get("/searchmanager",searchManager)
+router.get("/manager/getAllManagers", getAllManagers);
 router.get("/autocomplete", autocompleteManager);
-router.get("/getemployeebyid/:id", getEmployeeById);
+
 //employees
-router.post("/employee/signin", employeeSignIn);
 router.post("/employee/signup", employeeSignUp);
 router.get("/validationEmail/:id", validateEmail);
+router.get("/getEmployeeById/:id", getEmployeeById);
+router.post("/employee/signin", employeeSignIn);
 router.put("/employee/update/:id", updateEmployee);
 router.delete("/employee/delete/:id", deleteEmployee);
-router.get("/employee/getallempolyees", getAllEmployees);
+router.get("/employee/getAllEmployees", getAllEmployees);
 
 export default router;

@@ -1,9 +1,10 @@
 import { Router } from "express";
-import query from "../controllers/professions.controller.js";
+import professionQueries from "../controllers/professions.controller.js";
 const router = Router();
-const { getAllProfessions, addProfession, deleteProfession } = query;
+const { getAllProfessions, addProfession, deleteProfession } =
+  professionQueries;
 
-router.get("/getallprofessions", getAllProfessions);
-router.post("/addprofession", addProfession);
-router.delete("/deleteprofession/:id", deleteProfession);
+router.get("/getAllProfessions", getAllProfessions);
+router.post("/addProfession", addProfession);
+router.delete("/deleteProfession/:id", deleteProfession);
 export default router;
