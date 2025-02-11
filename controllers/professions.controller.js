@@ -1,72 +1,75 @@
 import professionsModal from "../models/professions.modal.js";
 
 export default {
-    getAllProfessions: async (req, res) => {
-        try {
-            const { page, limit } = req.query;
+  getAllProfessions: async (req, res) => {
+    try {
+      const { page, limit } = req.query;
 
-            const count = await professionsModal.countDocuments();
+      const count = await professionsModal.countDocuments();
 
-            const skip = (page - 1) * limit;
+      const skip = (page - 1) * limit;
 
-            const professions = await professionsModal
-                .find()
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit);
+      const professions = await professionsModal
+        .find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
-            res.status(200).json({
-                success: true,
-                message: true,
-                data: professions,
-                count: count,
-            });
-        } catch (error) {
-            res.status(200).json({
-                success: false,
-                message: false,
-                error: error || error.message,
-            });
-        }
-    },
-    addProfession: async (req, res) => {
-        try {
-            const { profession_name } = req.body;
+      res.status(200).json({
+        success: true,
+        message: "Counting was successful",
+        data: professions,
+        count: count,
+      });
+    } catch (error) {
+      res.status(200).json({
+        success: false,
+        message: "Failed to get all professions",
+        error: error.message || error,
+      });
+    }
+  },
 
-            if (!profession_name) {
-                throw new Error("the field is required!");
-            }
+  addProfession: async (req, res) => {
+    try {
+      const { profession_name } = req.body;
 
-            const profession = await professionsModal.create(req.body);
+      if (!profession_name) {
+        throw new Error("the field is required!");
+      }
 
-            res.status(200).json({
-                success: true,
-                message: "new profession is added successfuly",
-                profession,
-            });
-        } catch (error) {
-            res.status(401).json({
-                success: false,
-                message: "new profession is not added successfuly",
-                error: error.message || error,
-            });
-        }
-    },
-    deleteProfession: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const professionDeleted = await professionsModal.findByIdAndDelete(id);
-            res.status(200).json({
-                success: true,
-                message: true,
-                data: professionDeleted
-            });
-        } catch (error) {
-            res.status(401).json({
-                success: false,
-                message: false,
-                error: error || error.message,
-            });
-        }
-    },
+      const profession = await professionsModal.create(req.body);
+
+      res.status(200).json({
+        success: true,
+        message: "new profession is added successfully",
+        data: profession,
+      });
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        message: "New profession isn't added successfully",
+        error: error.message || error,
+      });
+    }
+  },
+
+  deleteProfession: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const professionDeleted = await professionsModal.findByIdAndDelete(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Profession deleted successfully",
+        data: professionDeleted,
+      });
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        message: "Profession isn't deleted successfully",
+        error: error || error.message,
+      });
+    }
+  },
 };
