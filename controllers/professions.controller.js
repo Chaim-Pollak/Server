@@ -42,13 +42,17 @@ export default {
 
       res.status(200).json({
         success: true,
-        message: "new profession is added successfully",
+        message: "Profession added successfully",
         data: profession,
       });
     } catch (error) {
+      if (error.code === 11000) {
+        error.message = "Profession already exists!";
+      }
+
       res.status(401).json({
         success: false,
-        message: "New profession isn't added successfully",
+        message: "Failed adding profession",
         error: error.message || error,
       });
     }

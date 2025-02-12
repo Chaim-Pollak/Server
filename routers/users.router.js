@@ -28,7 +28,7 @@ const router = Router();
 
 //managers
 router.post("/manager/signup", signUp);
-router.post("/manager/signin", signIn);
+router.post("/manager/login", signIn);
 router.get("/auth", verifyToken, Auth);
 router.get("/logout", logOut);
 router.put("/manager/update/:id", update);
@@ -40,7 +40,7 @@ router.get("/autocomplete", autocompleteManager);
 router.post("/employee/signup", employeeSignUp);
 router.get("/validationEmail/:id", validateEmail);
 router.get("/getEmployeeById/:id", getEmployeeById);
-router.post("/employee/signin", employeeSignIn);
+router.post("/employee/signIn", employeeSignIn);
 router.put("/employee/update/:id", updateEmployee);
 router.delete("/employee/delete/:id", deleteEmployee);
 router.get("/employee/getAllEmployees", getAllEmployees);

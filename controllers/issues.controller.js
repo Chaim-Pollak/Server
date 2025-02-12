@@ -43,7 +43,7 @@ export default {
 
       res.status(200).json({
         success: true,
-        message: "Success add issue",
+        message: "Issue added successfully",
         issue,
       });
     } catch (error) {
@@ -150,13 +150,13 @@ export default {
 
       res.status(200).json({
         success: true,
-        message: true,
+        message: "Issue updated successfully",
         issueUpdated,
       });
     } catch (error) {
       res.status(401).json({
         success: false,
-        message: false,
+        message: "Failed to update issue",
         error: error || error.message,
       });
     }

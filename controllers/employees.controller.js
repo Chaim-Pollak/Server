@@ -50,7 +50,7 @@ export default {
 
       res.status(200).json({
         success: true,
-        message: true,
+        message: "Employee added successfully",
         employee,
       });
     } catch (error) {
@@ -59,7 +59,7 @@ export default {
       }
       res.status(401).json({
         success: false,
-        message: false,
+        message: "Failed to add employee",
         error: error.message || error,
       });
     }
@@ -322,13 +322,13 @@ export default {
 
       res.status(200).json({
         success: true,
-        message: true,
+        message: "Updated successfully",
         employeeUpdated,
       });
     } catch (error) {
       res.status(401).json({
         success: false,
-        message: false,
+        message: "Not updated successfully",
         error: error || error.message,
       });
     }
