@@ -340,13 +340,13 @@ export default {
       const employeeDeleted = await employeeModel.findByIdAndDelete(id);
       res.status(200).json({
         success: true,
-        message: true,
+        message: "Employee deleted successfully",
         employeeDeleted,
       });
     } catch (error) {
       res.status(401).json({
         success: false,
-        message: false,
+        message: "Failed to delete employee",
         error: error || error.message,
       });
     }

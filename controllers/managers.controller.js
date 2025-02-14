@@ -138,13 +138,13 @@ export default {
       const managerDeleted = await managerModel.findByIdAndDelete(id);
       res.status(200).json({
         success: true,
-        message: "The manager has been successfully deleted",
+        message: "Manager deleted successfully",
         data: managerDeleted,
       });
     } catch (error) {
       res.status(401).json({
         success: false,
-        message: false,
+        message: "failed deleting manager",
         error: error || error.message,
       });
     }
@@ -177,9 +177,10 @@ export default {
       });
     }
   },
-  //BUG search doesn't working
+
   autocompleteManager: async (req, res) => {
-    const INDEX_NAME = "autocomplete";
+    console.log("autocompleteManager");
+    const INDEX_NAME = "autocompleteManager";
     try {
       const SearchQuery = req.query.query;
 
@@ -205,13 +206,14 @@ export default {
         },
       });
       const result = await managerModel.aggregate(pipeline).sort({ score: -1 });
-
+      console.log("result", result);
       res.json({
         success: true,
         message: "the manager is found successfully",
         data: result,
       });
     } catch (error) {
+      console.log("not work");
       res.json({
         success: false,
         message: "the manager is not found successfully",

@@ -71,7 +71,7 @@ export default {
     } catch (error) {
       res.status(401).json({
         success: false,
-        message: "Profession isn't deleted successfully",
+        message: "Failed deleting profession",
         error: error || error.message,
       });
     }

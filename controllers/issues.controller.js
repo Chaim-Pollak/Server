@@ -130,7 +130,7 @@ export default {
       res.json({
         success: true,
         message: "the issue is found successfully",
-        result,
+        data: result,
       });
     } catch (error) {
       res.json({
@@ -203,7 +203,7 @@ export default {
                 </div>
 
                 <div style="text-align: center; margin-bottom: 20px">
-                    <h1 style="font-size: 24px; color: #92400e;">Fault successfully resolved!</h1>
+                    <h1 style="font-size: 24px; color: #92400e;">Issue successfully resolved!</h1>
                     <div style="width: 100px; height: 5px; background: #fbbf24; margin: 0 auto; border-radius: 2px;"></div>
                 </div>
 
