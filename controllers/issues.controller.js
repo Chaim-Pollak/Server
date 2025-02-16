@@ -49,7 +49,8 @@ export default {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Failed to add Issue",
+        error: error || error.message,
       });
     }
   },
@@ -260,14 +261,14 @@ export default {
 
       res.status(200).json({
         success: true,
-        message: true,
+        message: "Issue associated successfully",
         data: issueUpdated,
         data2: employeeUpdated,
       });
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: false,
+        message: "Failed to associated issue",
         error: error || error.message,
       });
     }
@@ -276,9 +277,15 @@ export default {
   allIssuesByProfession: async (req, res) => {
     try {
       const { id } = req.params;
+      const { status = "all", urgency = "all" } = req.query;
+
+      const filterObject = {
+        ...(status !== "all" && { issue_status: status }),
+        ...(urgency !== "all" && { issue_urgency: urgency }),
+      };
 
       const allIssues = await issueModel
-        .find({ issue_profession: id })
+        .find({ issue_profession: id, ...filterObject })
         .populate(["employees", "issue_profession"]);
 
       res.json({

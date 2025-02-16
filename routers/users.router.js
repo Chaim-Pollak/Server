@@ -40,7 +40,7 @@ router.get("/autocomplete", autocompleteManager);
 router.post("/employee/signup", employeeSignUp);
 router.get("/validationEmail/:id", validateEmail);
 router.get("/getEmployeeById/:id", getEmployeeById);
-router.post("/employee/signIn", employeeSignIn);
+router.post("/employee/login", employeeSignIn);
 router.put("/employee/update/:id", updateEmployee);
 router.delete("/employee/delete/:id", deleteEmployee);
 router.get("/employee/getAllEmployees", getAllEmployees);

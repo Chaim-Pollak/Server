@@ -22,7 +22,7 @@ router.get("/getAllIssues", getAllIssues);
 router.get("/autocomplete", autocompleteIssue);
 router.put("/update/:id", updateIssue);
 router.post("/deleteAndArchiveIssue/:id", deleteAndArchiveIssue);
-router.put("/updateIssue", associateEmployeeWithIssue);
+router.put("/updateIssueAssociate", associateEmployeeWithIssue);
 router.get("/allIssuesByProfession/:id", allIssuesByProfession);
 
 //History

@@ -65,6 +65,49 @@ export default {
     }
   },
 
+  employeeSignIn: async (req, res) => {
+    try {
+      const { employeeEmail, employeePassword } = req.body;
+      const employee = await employeeModel
+        .findOne({ employeeEmail })
+        .select("+employeePassword");
+      if (!employee) {
+        throw new Error("Employee not exist");
+      }
+
+      const isPasswordValid = await compare(
+        employeePassword,
+        employee.employeePassword
+      );
+
+      if (!isPasswordValid) {
+        throw new Error("the password not valid");
+      }
+
+      const token = jwt.sign({ ...employee }, process.env.JWT_SECRET, {
+        expiresIn: 60 * 60 * 60 * 1,
+      });
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 1,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Success Login employee",
+        data: employee,
+      });
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        message: "Not success Login employee",
+        error: error.message || error,
+      });
+    }
+  },
+
   validateEmail: async (req, res) => {
     try {
       const { id } = req.params;
@@ -253,49 +296,6 @@ export default {
       });
     } catch (error) {
       res.json({
-        success: false,
-        message: false,
-        error: error.message || error,
-      });
-    }
-  },
-
-  employeeSignIn: async (req, res) => {
-    try {
-      const { employeeEmail, employeePassword } = req.body;
-      const employee = await employeeModel
-        .findOne({ employeeEmail })
-        .select("+employeePassword");
-      if (!employee) {
-        throw new Error("Email not exist");
-      }
-
-      const isPasswordValid = await compare(
-        employeePassword,
-        employee.employeePassword
-      );
-
-      if (!isPasswordValid) {
-        throw new Error("the password not match");
-      }
-
-      const token = jwt.sign({ ...employee }, process.env.JWT_SECRET, {
-        expiresIn: 60 * 60 * 60 * 1,
-      });
-
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 1,
-      });
-
-      res.status(200).json({
-        success: true,
-        message: true,
-        data: employee,
-      });
-    } catch (error) {
-      res.status(401).json({
         success: false,
         message: false,
         error: error.message || error,
