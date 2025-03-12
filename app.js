@@ -14,7 +14,7 @@ mongoDB();
 const app = express();
 app.use(express.json());
 
-import issuesRouter from "./routers/issues.routter.js";
+import issuesRouter from "./routers/issues.router.js";
 import usersRouter from "./routers/users.router.js";
 import professionsRouter from "./routers/profession.router.js";
 import generalRouter from "./routers/general.router.js";
